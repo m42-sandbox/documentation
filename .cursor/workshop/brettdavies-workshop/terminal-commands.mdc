@@ -1,0 +1,180 @@
+---
+description: "Guidelines for generating terminal commands that ensure outputs are readable by Cursor agents"
+globs: ["**/*.*"]
+alwaysApply: true
+---
+
+# Terminal Command Guidelines for Cursor Agents
+
+This document defines the mandatory guidelines for generating terminal commands that ensure outputs are readable by Cursor agents. These guidelines MUST be followed for all terminal commands.
+
+## **COMMAND OUTPUT VISIBILITY REQUIREMENTS**
+
+### 1. **E2E Testing Commands**
+
+When running E2E tests, ALWAYS include the `--reporter=list` flag to ensure test results are displayed in a format that Cursor agents can read:
+
+```bash
+# CORRECT - Use list reporter
+npm run test:e2e -- --reporter=list
+
+# CORRECT - Running specific tests with list reporter
+npm run test:e2e -- --project=chromium tests/e2e/keyboard.spec.js --reporter=list
+
+# INCORRECT - Missing list reporter
+npm run test:e2e
+```
+
+### 2. **Commands with Pagers or Interactive Output**
+
+For ANY commands that use pagers or require user interaction, ALWAYS append ` | cat` to ensure output is displayed directly:
+
+```bash
+# CORRECT - Piping to cat
+git log | cat
+git diff | cat
+less file.txt | cat
+man command | cat
+
+# INCORRECT - Will get stuck in pager
+git log
+git diff
+less file.txt
+man command
+```
+
+### 3. **Verbose Output Flags**
+
+ALWAYS use verbose output flags when available to ensure maximum visibility:
+
+```bash
+# CORRECT - Using verbose flags
+npm install --verbose
+git clone --verbose https://github.com/user/repo.git
+rsync -avh source/ destination/
+
+# INCORRECT - Missing verbose flags
+npm install
+git clone https://github.com/user/repo.git
+rsync -a source/ destination/
+```
+
+### 4. **Avoiding Interactive Editors**
+
+NEVER use commands that launch interactive editors without specifying non-interactive alternatives:
+
+```bash
+# CORRECT - Using non-interactive alternatives
+git config --global core.editor "cat"
+EDITOR=cat crontab -e
+echo "content" > file.txt
+
+# INCORRECT - Will launch interactive editors
+git commit (without -m flag)
+crontab -e
+vi file.txt
+```
+
+### 5. **Handling Long-Running Commands**
+
+For long-running commands, ALWAYS use one of these approaches:
+- Add timeout limits
+- Run in background with output redirection
+- Use polling commands to check status
+
+```bash
+# CORRECT - With timeout
+timeout 30s command
+
+# CORRECT - Background with output redirection
+command > output.log 2>&1 &
+
+# CORRECT - Using polling
+while sleep 2; do ps aux | grep command; done
+```
+
+### 6. **Ensuring Exit Codes are Visible**
+
+ALWAYS check command exit codes for critical operations:
+
+```bash
+# CORRECT - Checking exit code
+command && echo "Success: $?" || echo "Failed: $?"
+
+# CORRECT - Using set -e with echo statements
+set -e
+echo "Running command..."
+command
+echo "Command completed successfully"
+```
+
+### 7. **Investigating Pull Requests**
+
+When investigating PRs, use non-interactive commands and ensure all output is visible:
+
+```bash
+# CORRECT - Viewing PR details
+gh pr view <PR_NUMBER> --json title,state,body,comments | cat
+
+# CORRECT - Listing PR files with changes
+gh pr view <PR_NUMBER> --files | cat
+
+# CORRECT - Checking out PR for local testing
+gh pr checkout <PR_NUMBER> && echo "PR #<PR_NUMBER> checked out successfully"
+
+# CORRECT - Viewing PR diff
+gh pr diff <PR_NUMBER> | cat
+
+# INCORRECT - Interactive PR review
+gh pr review <PR_NUMBER>
+```
+
+### 8. **Resolving Merge Conflicts**
+
+For merge conflict resolution, avoid interactive merge tools and use explicit commands:
+
+```bash
+# CORRECT - Identifying conflicts
+git status | grep "both modified:" | cat
+
+# CORRECT - Viewing conflicts in specific file
+git diff --check | cat
+git diff --name-only --diff-filter=U | cat
+
+# CORRECT - Showing conflict markers in a file
+git show :1:file.txt > file.base.txt
+git show :2:file.txt > file.ours.txt
+git show :3:file.txt > file.theirs.txt
+diff -u file.base.txt file.ours.txt | cat
+diff -u file.base.txt file.theirs.txt | cat
+
+# CORRECT - Resolving with explicit choice
+git checkout --ours path/to/file.txt && echo "Kept our version of file.txt"
+git checkout --theirs path/to/file.txt && echo "Kept their version of file.txt"
+
+# INCORRECT - Using interactive merge tools
+git mergetool
+```
+
+## **COMMAND CATEGORIES TO USE WITH CAUTION**
+
+1. **File Editors**: vim, nano, emacs, etc.
+2. **Interactive Shells**: python (without -c), node (without -e), etc.
+3. **Pager Programs**: less, more, most, etc.
+4. **Interactive Prompts**: mysql, psql, mongo shells, etc.
+5. **Terminal UI Applications**: htop, top, etc.
+6. **Interactive Git Commands**: git add -p, git rebase -i, etc.
+7. **Merge Resolution Tools**: git mergetool, meld, etc.
+
+## **VERIFICATION CHECKLIST**
+
+Before executing any terminal command, verify:
+- [x] Command output will be visible to Cursor agent
+- [x] No interactive pagers or editors will be launched
+- [x] Verbose flags are used where appropriate
+- [x] Long-running commands have timeout or background handling
+- [x] Exit codes will be visible for critical operations
+- [x] PR investigation uses non-interactive commands
+- [x] Merge conflict resolution avoids interactive tools
+
+IMPORTANT: Failure to follow these guidelines may result in the Cursor agent being unable to see command output or becoming stuck in interactive prompts. 

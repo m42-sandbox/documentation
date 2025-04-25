@@ -1,0 +1,62 @@
+---
+description: teck stack and versions
+globs: *.*
+---
+# Technology Stack Specification
+
+## Platform Requirements
+```yaml
+ios:
+  minimum_version: "18.2"
+  target_version: "18.2"
+  xcode_version: "15.2"
+  build_system: "Swift PM"
+
+language:
+  swift_version: "6.0"
+  swift_tools_version: "6.0"
+  swift_concurrency: "strict"
+  actor_isolation: "strict"
+```
+
+## Framework Dependencies
+```yaml
+required:
+  - SwiftUI: "18.2"
+  - AVFoundation: "18.2"
+  - CoreImage: "18.2"
+  - VideoToolbox: "18.2"
+
+optional:
+  - CoreML: "18.2"
+  - Vision: "18.2"
+```
+
+## Development Tools
+```yaml
+required:
+  - xcode_build_server: "15.2"
+  - swift_format: "0.53.0"
+  - xcbeautify: "1.1.1"
+
+recommended:
+  - cursor_ide: "latest"
+  - swift_lint: "0.54.0"
+```
+
+## Compiler Settings
+```yaml
+swift_settings:
+  concurrency_checking: "strict"
+  type_checking: "strict"
+  actor_isolation: "strict"
+  sendable_checking: "strict"
+  build_configuration: "debug"
+```
+
+## Notes
+- All versions must be exact matches unless specified as "latest"
+- Swift 6 strict concurrency and actor isolation rules must be followed
+- All new code must be fully async/await compliant
+- No usage of deprecated APIs from iOS versions < 18.2
+- All frameworks must use iOS 18.2 APIs and features 
