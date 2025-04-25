@@ -1,0 +1,12 @@
+---
+description: Current datetime
+globs: *
+alwaysApply: true
+---
+# Current Datetime
+
+You can retrieve the current UTC datetime formatted as `YYYYMMDDHHMMSS`, by using the following shell command:
+
+```sh
+date -u +%Y%m%d%H%M%S
+```

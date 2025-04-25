@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Master Rule Index
+
+This document serves as the central index for all active Cursor rules within this repository, organized by category. These rules define processes, structures, and guidelines for development.
+
+## Core & General
+
+Fundamental project structure, setup, and general development guidelines.
+
+| Rule File                          | Description                                                 |
+| :--------------------------------- | :---------------------------------------------------------- |
+| [current-datetime.mdc](mdc:.cursor/rules/current-datetime.mdc)                  | Guidelines for generating UTC datetime strings for filenames and migrations |
+
+## Git
+
+Guidelines for version control and commit management.
+
+| Rule File                          | Description                                                 |
+| :--- | :---- |
+| [git-workflow.mdc](mdc:.cursor/rules/git/git-workflow.mdc)              | Step-by-step instructions for Git workflow, including branch management, commits, and PR process |
+| [git-commit-conventions.mdc](mdc:.cursor/rules/git/git-commit-conventions.mdc)    | Strict Git commit message guidelines with explicit step-by-step instructions |
+| [git-capture-diffs.sh](mdc:.cursor/rules/git/git-capture-diffs.sh)         | Shell script for capturing Git diffs for commit messages    |
+
+## Database & SQL
+
+Guidelines for SQL operations, migrations, and database management.
+
+| Rule File                          | Description                                                 |
+| :--- | :---- |
+| [sql-format.mdc](mdc:.cursor/rules/sql/sql-format.mdc)                | Supabase Postgres SQL Style Guide                          |
+| [sql-functions.mdc](mdc:.cursor/rules/sql/sql-functions.mdc)             | Supabase Postgres SQL Function Guide                       |
+| [sql-migrations.mdc](mdc:.cursor/rules/sql/sql-migrations.mdc)            | Supabase Postgres SQL Migration Guide                      |
+| [sql-rls-policies.mdc](mdc:.cursor/rules/sql/sql-rls-policies.mdc)          | Supabase Postgres SQL RLS Row Level Security Guide         |
