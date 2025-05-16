@@ -24,7 +24,7 @@ mdc: true
 
 # AI in EdTech
 
-### Leveraging Small Language Models for Next-Generation Learning
+### Leveraging Prompting for Small Model Enhancement
 
 <div class="abs-br m-6 text-xl">
   <carbon:presentation-file />
